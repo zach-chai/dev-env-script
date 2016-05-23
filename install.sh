@@ -20,6 +20,18 @@ curl -sSL https://github.com/github/hub/releases/download/v${hub_version}/hub-li
   && rm -f hub.tgz \
   && rm -rf hub-linux-amd64-${hub_version}
 
+
+# Install atom
+add-apt-repository -y ppa:webupd8team/atom
+apt-get update
+apt-get install -y atom
+apm install language-docker
+apm install file-icons
+apm install symbols-tree-view
+apm install auto-detect-indentation
+apm install highlight-selected
+
+
 # Setup dotfiles
 if [ ! -d ~/.dotfiles ]; then
   git clone https://github.com/zach-chai/dotfiles.git ~/.dotfiles
