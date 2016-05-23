@@ -10,10 +10,11 @@ fi
 apt-get update
 apt-get install -y ssh git vim curl wget zsh software-properties-common
 
+
 # Hub
 hub_version="$(wget -qO- https://api.github.com/repos/github/hub/releases/latest | grep tag_name | cut -d'"' -f4 | cut -c 2-)"
 
-curl -sSL https://github.com/github/hub/releases/download/v${hub_version}/hub-linux-amd64-${hub_version}.tgz -o hub.tgz \
+curl -fsSL https://github.com/github/hub/releases/download/v${hub_version}/hub-linux-amd64-${hub_version}.tgz -o hub.tgz \
   && tar -xf hub.tgz \
   && ./hub-linux-amd64-${hub_version}/install \
   && rm -f hub.tgz \
@@ -41,7 +42,7 @@ fi
 # Docker
 if ! type "docker" > /dev/null; then
   echo "Installing Docker..."
-  wget -qO- https://get.docker.com/ | sh
+  curl -fsSL https://get.docker.com/ | sh
   usermod -a -G docker $(whoami)
 fi
 
