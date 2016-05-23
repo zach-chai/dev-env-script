@@ -6,6 +6,11 @@ if [ "$(whoami)" != "root" ]; then
 	exit 1
 fi
 
+# Update and install dependencies
+apt-get update
+apt-get install -y ssh git vim curl wget zsh software-properties-common
+
+
 # Setup dotfiles
 if [ ! -d ~/.dotfiles ]; then
   git clone https://github.com/zach-chai/dotfiles.git ~/.dotfiles
