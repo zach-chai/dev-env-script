@@ -2,7 +2,7 @@
 
 
 if [ "$(whoami)" != "root" ]; then
-	echo "Script requires root priviliges"
+	echo "Execute with sudo $ sudo ./install.sh"
 	exit 1
 fi
 
@@ -25,11 +25,11 @@ curl -fsSL https://github.com/github/hub/releases/download/v${hub_version}/hub-l
 add-apt-repository -y ppa:webupd8team/atom
 apt-get update
 apt-get install -y atom
-apm install language-docker
-apm install file-icons
-apm install symbols-tree-view
-apm install auto-detect-indentation
-apm install highlight-selected
+su - $(whoami) -c apm install language-docker
+su - $(whoami) -c apm install file-icons
+su - $(whoami) -c apm install symbols-tree-view
+su - $(whoami) -c apm install auto-detect-indentation
+su - $(whoami) -c apm install highlight-selected
 
 
 # Setup dotfiles
