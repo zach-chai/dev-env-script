@@ -12,24 +12,28 @@ apt-get install -y ssh git vim curl wget zsh software-properties-common
 
 
 # Hub
-hub_version="$(wget -qO- https://api.github.com/repos/github/hub/releases/latest | grep tag_name | cut -d'"' -f4 | cut -c 2-)"
-
-curl -fsSL https://github.com/github/hub/releases/download/v${hub_version}/hub-linux-amd64-${hub_version}.tgz -o hub.tgz \
-  && tar -xf hub.tgz \
-  && ./hub-linux-amd64-${hub_version}/install \
-  && rm -f hub.tgz \
-  && rm -rf hub-linux-amd64-${hub_version}
-
+if ! type "hub" > /dev/null; then
+  hub_version="$(wget -qO- https://api.github.com/repos/github/hub/releases/latest | grep tag_name | cut -d'"' -f4 | cut -c 2-)"
+  curl -fsSL https://github.com/github/hub/releases/download/v${hub_version}/hub-linux-amd64-${hub_version}.tgz -o hub.tgz \
+    && tar -xf hub.tgz \
+    && ./hub-linux-amd64-${hub_version}/install \
+    && rm -f hub.tgz \
+    && rm -rf hub-linux-amd64-${hub_version}
+else
+	hub_version=$(hub --version | grep hub | cut -d ' ' -f 3)
+fi
 
 # Atom
-add-apt-repository -y ppa:webupd8team/atom
-apt-get update
-apt-get install -y atom
-su - $(whoami) -c apm install language-docker
-su - $(whoami) -c apm install file-icons
-su - $(whoami) -c apm install symbols-tree-view
-su - $(whoami) -c apm install auto-detect-indentation
-su - $(whoami) -c apm install highlight-selected
+if ! type "atom" > /dev/null; then
+  add-apt-repository -y ppa:webupd8team/atom
+  apt-get update
+  apt-get install -y atom
+  su - $(whoami) -c apm install language-docker
+  su - $(whoami) -c apm install file-icons
+  su - $(whoami) -c apm install symbols-tree-view
+  su - $(whoami) -c apm install auto-detect-indentation
+  su - $(whoami) -c apm install highlight-selected
+fi
 
 
 # Setup dotfiles
@@ -48,12 +52,30 @@ fi
 
 # Docker compose
 if ! type "docker-compose" > /dev/null; then
-	echo "Installing Docker Compose..."
-  LATEST="$(wget -qO- https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d'"' -f4)"
-  wget -q https://github.com/docker/compose/releases/download/${LATEST}/docker-compose-`uname -s`-`uname -m`
+  echo "Installing Docker Compose..."
+  compose_version="$(wget -qO- https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d'"' -f4)"
+  wget -q https://github.com/docker/compose/releases/download/${compose_version}/docker-compose-`uname -s`-`uname -m`
   mv docker-compose-`uname -s`-`uname -m` /usr/local/bin/docker-compose
   chmod +x /usr/local/bin/docker-compose
+else
+  compose_version="$(docker-compose -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
 fi
 
+# Docker machine
+if ! type "docker-machine" > /dev/null; then
+  echo "Installing Docker Machine..."
+  machine_version="$(wget -qO- https://api.github.com/repos/docker/machine/releases/latest | grep tag_name | cut -d'"' -f4)"
+  curl -L https://github.com/docker/machine/releases/download/${machine_version}/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
+  chmod +x /usr/local/bin/docker-machine
+else
+  machine_version="$(docker-machine -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
+fi
+
+echo "dotfiles are configured"
+echo "hub version ${hub_version} is installed"
+echo "atom version $(atom -v | grep Atom | cut -d ' ' -f 6) is installed"
+echo "docker version $(docker -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev) is installed"
+echo "docker compose version ${compose_version} is installed"
+echo "docker machine version ${machine_version} is installed"
 
 echo "Finished."
