@@ -24,24 +24,16 @@ else
 fi
 
 # Atom
-if ! type "atom" > /dev/null; then
-  add-apt-repository -y ppa:webupd8team/atom
-  apt-get update
-  apt-get install -y atom
-  su - $(whoami) -c apm install language-docker
-  su - $(whoami) -c apm install file-icons
-  su - $(whoami) -c apm install symbols-tree-view
-  su - $(whoami) -c apm install auto-detect-indentation
-  su - $(whoami) -c apm install highlight-selected
-fi
-
-
-# Setup dotfiles
-if [ ! -d ~/.dotfiles ]; then
-  git clone https://github.com/zach-chai/dotfiles.git ~/.dotfiles
-  cd ~/.dotfiles && ./install.sh
-  cd ~
-fi
+# if ! type "atom" > /dev/null; then
+#   add-apt-repository -y ppa:webupd8team/atom
+#   apt-get update
+#   apt-get install -y atom
+#   su - $(whoami) -c apm install language-docker
+#   su - $(whoami) -c apm install file-icons
+#   su - $(whoami) -c apm install symbols-tree-view
+#   su - $(whoami) -c apm install auto-detect-indentation
+#   su - $(whoami) -c apm install highlight-selected
+# fi
 
 # Docker
 if ! type "docker" > /dev/null; then
@@ -71,11 +63,18 @@ else
   machine_version="$(docker-machine -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
 fi
 
-echo "dotfiles are configured"
-echo "hub version ${hub_version} is installed"
-echo "atom version $(atom -v | grep Atom | cut -d ' ' -f 6) is installed"
-echo "docker version $(docker -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev) is installed"
-echo "docker compose version ${compose_version} is installed"
-echo "docker machine version ${machine_version} is installed"
+# Setup dotfiles
+if [ ! -d ~/.dotfiles ]; then
+  git clone https://github.com/zach-chai/dotfiles.git ~/.dotfiles
+  cd ~/.dotfiles && ./install.sh
+  cd ~
+fi
+
+echo -e "\nInstalled Versions:"
+echo "hub ${hub_version}"
+# echo "atom $(atom -v | grep Atom | cut -d ' ' -f 6)"
+echo "docker $(docker -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
+echo "docker-compose ${compose_version}"
+echo "docker-machine ${machine_version}"
 
 echo "Finished."
