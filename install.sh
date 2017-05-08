@@ -8,7 +8,7 @@ fi
 
 # Update and install dependencies
 apt-get update
-apt-get install -y ssh git vim curl wget zsh software-properties-common
+apt-get install -y ssh git vim curl wget zsh software-properties-common tmux
 
 
 # Hub
