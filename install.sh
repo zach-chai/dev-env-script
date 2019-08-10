@@ -23,18 +23,6 @@ else
 	hub_version=$(hub --version | grep hub | cut -d ' ' -f 3)
 fi
 
-# Atom
-# if ! type "atom" > /dev/null; then
-#   add-apt-repository -y ppa:webupd8team/atom
-#   apt-get update
-#   apt-get install -y atom
-#   su - $(whoami) -c apm install language-docker
-#   su - $(whoami) -c apm install file-icons
-#   su - $(whoami) -c apm install symbols-tree-view
-#   su - $(whoami) -c apm install auto-detect-indentation
-#   su - $(whoami) -c apm install highlight-selected
-# fi
-
 # Docker
 if ! type "docker" > /dev/null; then
   echo "Installing Docker..."
@@ -51,16 +39,6 @@ if ! type "docker-compose" > /dev/null; then
   chmod +x /usr/local/bin/docker-compose
 else
   compose_version="$(docker-compose -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
-fi
-
-# Docker machine
-if ! type "docker-machine" > /dev/null; then
-  echo "Installing Docker Machine..."
-  machine_version="$(wget -qO- https://api.github.com/repos/docker/machine/releases/latest | grep tag_name | cut -d'"' -f4)"
-  curl -L https://github.com/docker/machine/releases/download/${machine_version}/docker-machine-`uname -s`-`uname -m` > /usr/local/bin/docker-machine && \
-  chmod +x /usr/local/bin/docker-machine
-else
-  machine_version="$(docker-machine -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
 fi
 
 # Setup dotfiles
