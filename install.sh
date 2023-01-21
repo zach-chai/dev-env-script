@@ -53,6 +53,5 @@ echo "hub ${hub_version}"
 # echo "atom $(atom -v | grep Atom | cut -d ' ' -f 6)"
 echo "docker $(docker -v | cut -d ' ' -f 3 | rev | cut -c 2- | rev)"
 echo "docker-compose ${compose_version}"
-echo "docker-machine ${machine_version}"
 
 echo "Finished."
